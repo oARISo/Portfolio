@@ -98,6 +98,57 @@
             width: 100%;
             max-width: 600px;
             margin-top: 10px;
+            position: relative;
+        }
+
+        .five-petal-flower {
+            position: absolute;
+            left: -16px;
+            top: -16px;
+            width: 31px;
+            height: 31px;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+            z-index: 2;
+        }
+
+        .ratio-detail-card .five-petal-flower {
+            left: -16px;
+            top: -16px;
+            width: 31px;
+            height: 31px;
+            opacity: 0.95;
+        }
+
+        .flower-petal {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 11px;
+            height: 15px;
+            background: #ff5a36;
+            border: none;
+            box-shadow: 0 0 0 1px #ffffff;
+            border-radius: 50% 50% 45% 45%;
+            transform-origin: 50% 90%;
+        }
+
+        .flower-petal:nth-child(1) { transform: translate(-50%, -90%) rotate(0deg); }
+        .flower-petal:nth-child(2) { transform: translate(-50%, -90%) rotate(72deg); }
+        .flower-petal:nth-child(3) { transform: translate(-50%, -90%) rotate(144deg); }
+        .flower-petal:nth-child(4) { transform: translate(-50%, -90%) rotate(216deg); }
+        .flower-petal:nth-child(5) { transform: translate(-50%, -90%) rotate(288deg); }
+
+        .flower-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .ratio-detail-card {
@@ -112,7 +163,7 @@
             text-decoration: none;
             color: inherit;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .ratio-detail-card::after {
@@ -196,6 +247,30 @@
                 flex-direction: column;
                 max-width: 360px;
             }
+
+            .five-petal-flower {
+                left: -12px;
+                top: -22px;
+                width: 25px;
+                height: 25px;
+            }
+
+            .ratio-detail-card .five-petal-flower {
+                left: 6px;
+                top: -22px;
+                width: 21px;
+                height: 21px;
+            }
+
+            .flower-petal {
+                width: 9px;
+                height: 13px;
+            }
+
+            .flower-center {
+                width: 8px;
+                height: 8px;
+            }
         }
     </style>
 </head>
@@ -274,12 +349,28 @@
             </div>
 
             <div class="ratio-detail-row">
+                <div class="five-petal-flower" aria-hidden="true">
+                    <span class="flower-petal"></span>
+                    <span class="flower-petal"></span>
+                    <span class="flower-petal"></span>
+                    <span class="flower-petal"></span>
+                    <span class="flower-petal"></span>
+                    <span class="flower-center"></span>
+                </div>
                 <a class="ratio-detail-card main-card" href="viewMainWork.html">
                     <div class="pct main-pct">70%</div>
                     <div class="label">메인 업무 (LQA)</div>
                     <div class="click-hint">자세히 보기</div>
                 </a>
                 <a class="ratio-detail-card sub-card" href="viewSubWork.html">
+                    <div class="five-petal-flower" aria-hidden="true">
+                        <span class="flower-petal"></span>
+                        <span class="flower-petal"></span>
+                        <span class="flower-petal"></span>
+                        <span class="flower-petal"></span>
+                        <span class="flower-petal"></span>
+                        <span class="flower-center"></span>
+                    </div>
                     <div class="pct sub-pct">30%</div>
                     <div class="label">보조 업무 (PM 보조)</div>
                     <div class="click-hint">자세히 보기</div>
