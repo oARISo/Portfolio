@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 프로토타입 - 스킬</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            background-color: #0b0f0c;
+            background-image: radial-gradient(circle at center, #1b251d 0%, #080a08 100%);
+        }
+
+        .scene-container {
+            padding: 15px 25px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [능력정렬 가이드 영역] */
+        /* ------------------------------------------------------------- */
+        .sort-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .sort-capsule {
+            background-color: #f7f9ed;
+            border: 2px solid #b2bc95;
+            border-radius: 15px;
+            padding: 5px 15px;
+            color: #1a2210;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .sort-capsule::after {
+            content: '\25B2';
+            font-size: 0.7rem;
+            color: #555;
+        }
+
+        .sort-arrow-btn {
+            width: 32px;
+            height: 32px;
+            background: #ffffff;
+            border: 2.5px solid #b2bc95;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [메인 슬라이더 & 선반 레이아웃] */
+        /* ------------------------------------------------------------- */
+        .carousel-wrapper {
+            flex: 1;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: grab;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            touch-action: pan-y;
+        }
+
+        .carousel-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-wrapper.active {
+            cursor: grabbing;
+        }
+
+        .carousel-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-left: 50px;
+            padding-right: 150px;
+            min-width: max-content;
+        }
+
+        .shelf-row {
+            position: relative;
+            display: flex;
+            gap: 50px;
+            padding: 30px 20px 40px 20px;
+            height: 220px;
+            box-sizing: border-box;
+            align-items: flex-end;
+        }
+
+        .shelf-track {
+            position: absolute;
+            left: -50px;
+            right: -150px;
+            bottom: 30px;
+            height: 12px;
+            background: linear-gradient(to bottom, #2b302c 0%, #151816 100%);
+            border-top: 2px solid #48504a;
+            border-bottom: 2px solid #070908;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        .shelf-neon-line {
+            position: absolute;
+            left: -50px;
+            right: -150px;
+            bottom: 60px;
+            height: 4px;
+            background-image: linear-gradient(to right, #ffcc00 50%, transparent 50%);
+            background-size: 35px 100%;
+            opacity: 0.65;
+            filter: drop-shadow(0 0 5px #ffbb00);
+            z-index: 0;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [스킬 원판(Reel) 디자인] */
+        /* ------------------------------------------------------------- */
+        .reel-item {
+            position: relative;
+            width: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+        }
+
+        .spotlight-cone {
+            position: absolute;
+            top: -97px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 260px;
+            background: radial-gradient(ellipse at top, rgba(255, 208, 0, 0.28) 0%, rgba(255, 208, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .reel-wheel {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            z-index: 2;
+            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6));
+            transition: transform 0.2s ease;
+        }
+
+        .reel-item:hover .reel-wheel {
+            transform: scale(1.04) rotate(15deg);
+        }
+
+        .reel-icon-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .reel-icon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .badge-new {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom, #00cdff, #0074db);
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 1px 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #ffffff;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+            z-index: 4;
+            letter-spacing: 0.5px;
+        }
+
+        .reel-base-plate {
+            position: relative;
+            width: 125px;
+            height: 28px;
+            background-color: #171917;
+            border: 2px solid #2e332f;
+            border-radius: 6px;
+            margin-top: -8px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            background-image:
+                linear-gradient(to bottom, transparent 100%, #3e4740 100%),
+                linear-gradient(to right, transparent 100%, #3e4740 100%);
+        }
+
+        .reel-label {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 760px), (max-height: 560px) {
+            .scene-container {
+                padding: 8px 12px;
+            }
+
+            .sort-row {
+                margin-top: 0;
+            }
+
+            .carousel-wrapper {
+                align-items: flex-start;
+                padding-bottom: 12px;
+            }
+
+            .carousel-content {
+                gap: 8px;
+                padding-left: 16px;
+                padding-right: 60px;
+            }
+
+            .shelf-row {
+                gap: 28px;
+                height: 190px;
+                padding: 22px 10px 32px 10px;
+            }
+
+            .shelf-track {
+                left: -16px;
+                right: -60px;
+                bottom: 24px;
+            }
+
+            .shelf-neon-line {
+                left: -16px;
+                right: -60px;
+                bottom: 52px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <!-- 상단바 -->
+        <div class="top-bar">
+            <div class="top-left">
+                <!-- 뒤로가기 버튼 (클릭 시 메인 뷰 연결) -->
+                <button class="back-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="돌아가기">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <h1 class="skill-title">스킬</h1>
+            </div>
+
+            <!-- 우측 재화 & 홈 버튼 (디자인 복제용 무반응 처리) -->
+            <div class="top-right">
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-gold-icon">🪙</div>
+                        <span class="res-value">20,230,927</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-candy-icon">🍃</div>
+                        <span class="res-value">108,151</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <button class="home-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="홈으로">
+                    <!-- 집 아이콘 SVG -->
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1d3e04">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- 정렬 영역 -->
+        <div class="sort-row">
+            <div class="sort-capsule">열정적</div>
+            <button class="sort-arrow-btn">↑</button>
+        </div>
+
+        <!-- 가로 슬라이더 컨테이너 -->
+        <div class="carousel-wrapper" id="carouselWrapper">
+            <div class="carousel-content">
+
+                <!-- 상단 1행 선반 -->
+                <div class="shelf-row" id="shelfRow1">
+                    <div class="shelf-track"></div>
+                    <div class="shelf-neon-line"></div>
+                    <!-- JS에 의해 첫 번째 행 스킬들이 배치됩니다 -->
+                </div>
+
+                <!-- 하단 2행 선반 -->
+                <div class="shelf-row" id="shelfRow2">
+                    <div class="shelf-track"></div>
+                    <div class="shelf-neon-line"></div>
+                    <!-- JS에 의해 두 번째 행 스킬들이 배치됩니다 -->
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 핑크색 필름 릴 SVG 템플릿 정의 (마스크 처리로 구멍 뚫린 비주얼 완벽 연동) -->
+    <svg style="position: absolute; width: 0; height: 0;" width="0" height="0">
+        <defs>
+            <mask id="reelHolesMask">
+                <!-- 전체 흰색 채우기 (남길 부분) -->
+                <rect x="0" y="0" width="100" height="100" fill="#ffffff" />
+                <!-- 6개 원형 구멍 뚫기 (투명해질 부분) -->
+                <circle cx="50" cy="18" r="8.5" fill="#000000" />
+                <circle cx="78" cy="34" r="8.5" fill="#000000" />
+                <circle cx="78" cy="66" r="8.5" fill="#000000" />
+                <circle cx="50" cy="82" r="8.5" fill="#000000" />
+                <circle cx="22" cy="66" r="8.5" fill="#000000" />
+                <circle cx="22" cy="34" r="8.5" fill="#000000" />
+            </mask>
+        </defs>
+    </svg>
+
+    <script>
+        // =========================================================================
+        // [★ 스킬 커스터마이징 데이터]
+        // 원판 내에 이미지(또는 내장 고정밀 SVG)를 추가하고 아래 글자들을 수정할 수 있습니다.
+        // - name: 하단 검정 플레이트에 나타날 이름
+        // - icon: 로컬 이미지 경로(예: "word.png") 또는 아래 정의된 내장 SVG 아이콘 객체명
+        // - isNew: NEW 배지 표시 여부 (true/false)
+        // - row: 배치할 선반의 행 번호 (1 또는 2)
+        // =========================================================================
+
+        // 내장 고정밀 SVG 아이콘 템플릿 정의 (이미지 없이도 완벽한 비주얼 구현)
+        const svgIcons = {
+            word: `<svg viewBox="0 0 32 32" width="40" height="40"><rect x="7" y="3" width="21" height="26" rx="3.5" fill="#185abd" /><rect x="3" y="8" width="17" height="16" rx="2.5" fill="#106ebe" /><text x="11.5" y="20" font-family="'ONE Mobile POP', Arial" font-weight="900" font-size="12" fill="white" text-anchor="middle">W</text></svg>`,
+            excel: `<svg viewBox="0 0 32 32" width="40" height="40"><rect x="7" y="3" width="21" height="26" rx="3.5" fill="#107c41" /><rect x="3" y="8" width="17" height="16" rx="2.5" fill="#1f9a55" /><text x="11.5" y="20" font-family="'ONE Mobile POP', Arial" font-weight="900" font-size="12" fill="white" text-anchor="middle">X</text></svg>`,
+            jira: `<svg viewBox="0 0 32 32" width="40" height="40"><circle cx="16" cy="16" r="15" fill="#ffffff" /><path d="M16 8l4.5 4.5-4.5 4.5V8zm-5 0l4.5 4.5-4.5 4.5V0zm10-0l4.5 4.5-4.5 4.5V8z" fill="#0052cc" transform="rotate(-45 16 16) translate(-2, 3)" /></svg>`,
+            unity: `<svg viewBox="0 0 32 32" width="40" height="40"><circle cx="16" cy="16" r="15" fill="#000000" /><path d="M16 6l9 5.2v10.4l-9 5.2-9-5.2V11.2z" fill="none" stroke="#ffffff" stroke-width="2" /><path d="M16 6v10.4l9-5.2M16 16.4v10.4M16 16.4l-9-5.2" stroke="#ffffff" stroke-width="2" /></svg>`,
+            photoshop: `<svg viewBox="0 0 32 32" width="40" height="40"><rect x="2" y="2" width="28" height="28" rx="4" fill="#001829" stroke="#00c8ff" stroke-width="2" /><text x="15" y="21" font-family="Arial, sans-serif" font-weight="bold" font-size="13" fill="#00c8ff" text-anchor="middle">Ps</text></svg>`,
+            japanese: `<svg viewBox="0 0 32 32" width="40" height="40"><circle cx="16" cy="16" r="15" fill="#ffffff" /><clipPath id="cClip"><circle cx="16" cy="16" r="15" /></clipPath><rect x="0" y="16" width="32" height="16" fill="#ff8a00" clip-path="url(#cClip)" /><text x="16" y="13" font-family="'ONE Mobile POP', Arial" font-weight="bold" font-size="6.5" fill="#000" text-anchor="middle">JLPT</text><text x="16" y="27" font-family="'ONE Mobile POP', Arial" font-weight="bold" font-size="11" fill="#fff" text-anchor="middle">N2</text></svg>`,
+            catia: `<svg viewBox="0 0 32 32" width="40" height="40"><circle cx="16" cy="16" r="15" fill="#ffffff" /><text x="16" y="15" font-family="'Times New Roman', serif" font-weight="bold" font-style="italic" font-size="9.5" fill="#024794" text-anchor="middle">DS</text><text x="16" y="25" font-family="Arial" font-weight="900" font-size="6.5" fill="#024794" text-anchor="middle">CATIA</text></svg>`,
+        };
+
+        // 스킬 원판 목록 데이터 정의
+        const skillsData = [
+            // ---------------- [상단 1행 선반 스킬들] ----------------
+            { name: "워드", icon: "word", isNew: false, row: 1 },
+            { name: "Google Sheets", icon: "excel", isNew: false, row: 1 },
+            { name: "Jira", icon: "jira", isNew: false, row: 1 },
+            { name: "유니티 3D", icon: "unity", isNew: false, row: 1 },
+            // (가로 슬라이드 확인용 추가 원판)
+            { name: "ai 활용", icon: "antigravity.png", isNew: false, row: 1 },
+            { name: "빠른 습득력", icon: "명방_이성.png", isNew: false, row: 1 },
+
+            // ---------------- [하단 2행 선반 스킬들] ----------------
+            { name: "포토샵", icon: "photoshop", isNew: false, row: 2 },
+            { name: "영상툴", icon: "Subtitle_Edit.png", isNew: false, row: 2 },
+            { name: "일본어", icon: "japanese", isNew: false, row: 2 },
+            { name: "카티아 V5", icon: "catia", isNew: false, row: 2 },
+            // (가로 슬라이드 확인용 추가 원판)
+            { name: "업무 효율화", icon: "Python.png", isNew: false, row: 2 },
+            { name: "뛰어난 상상력", icon: "끈.png", isNew: false, row: 2 }
+        ];
+
+        // -------------------------------------------------------------
+        // [스킬 원판 DOM 렌더링 함수]
+        // -------------------------------------------------------------
+        function renderSkills() {
+            const shelfRow1 = document.getElementById('shelfRow1');
+            const shelfRow2 = document.getElementById('shelfRow2');
+
+            // 기존 슬롯 청소 (트랙과 라이트바는 유지)
+            document.querySelectorAll('.reel-item').forEach(el => el.remove());
+
+            skillsData.forEach(skill => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'reel-item';
+
+                // 1. 스포트라이트
+                const spotlight = document.createElement('div');
+                spotlight.className = 'spotlight-cone';
+                itemDiv.appendChild(spotlight);
+
+                // 2. NEW 배지 (true 인 경우만)
+                if (skill.isNew) {
+                    const badge = document.createElement('div');
+                    badge.className = 'badge-new';
+                    badge.textContent = 'NEW';
+                    itemDiv.appendChild(badge);
+                }
+
+                // 3. 필름 릴 바디 (SVG)
+                const reelWheel = document.createElement('div');
+                reelWheel.className = 'reel-wheel';
+                reelWheel.innerHTML = `
+                    <svg viewBox="0 0 100 100" width="120" height="120" style="display: block;">
+                        <!-- 바깥 분홍색 휠 섀도우 포함 -->
+                        <circle cx="50" cy="50" r="47" fill="#dc3674" stroke="#771038" stroke-width="2.5" />
+                        <!-- 입체감 반짝임 테두리 -->
+                        <circle cx="50" cy="50" r="44" fill="none" stroke="#ff73ab" stroke-width="2" />
+                        
+                        <!-- 구멍 뚫린 마스크드 휠 -->
+                        <circle cx="50" cy="50" r="47" fill="#f05b95" mask="url(#reelHolesMask)" />
+                        <!-- 마스크 영역 테두리 음영선 -->
+                        <circle cx="50" cy="50" r="44" fill="none" stroke="#ad1d53" stroke-width="1.5" mask="url(#reelHolesMask)" />
+                        
+                        <!-- 중앙 흰색 아이콘 배치판 -->
+                        <circle cx="50" cy="50" r="23" fill="#ffffff" stroke="#a0a8a2" stroke-width="1.2" />
+                        <circle cx="50" cy="50" r="21" fill="none" stroke="#e2e8e4" stroke-width="1.5" />
+                    </svg>
+                `;
+
+                // 4. 아이콘 주입
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'reel-icon-container';
+
+                // 데이터 분기 처리: 내장 라이브러리 키워드 매칭 또는 일반 이미지 경로/직접 SVG 매칭
+                let iconContentHtml = "";
+                const cleanIcon = typeof skill.icon === 'string' ? skill.icon.trim() : "";
+
+                if (svgIcons[cleanIcon]) {
+                    // 내장형 고정밀 SVG
+                    iconContentHtml = svgIcons[cleanIcon];
+                } else if (cleanIcon.startsWith('<svg') || cleanIcon.startsWith('&lt;svg')) {
+                    // 직접 삽입한 SVG 스트링
+                    iconContentHtml = skill.icon;
+                } else {
+                    // 외부 이미지 파일 경로 (예: "word.png")
+                    iconContentHtml = `<img src="${skill.icon}" alt="${skill.name}" class="reel-icon-img" onerror="this.src='data:image/svg+xml;utf8,<svg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23ccc%22/><text x=%2250%22 y=%2255%22 font-size=%2220%22 text-anchor=%22middle%22 fill=%22%23666%22>Img</text></svg>'">`;
+                }
+
+                iconContainer.innerHTML = iconContentHtml;
+                reelWheel.appendChild(iconContainer);
+                itemDiv.appendChild(reelWheel);
+
+                // 5. 검은색 받침대 플레이트 & 라벨 텍스트
+                const basePlate = document.createElement('div');
+                basePlate.className = 'reel-base-plate';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'reel-label';
+                labelSpan.textContent = skill.name;
+
+                basePlate.appendChild(labelSpan);
+                itemDiv.appendChild(basePlate);
+
+                // 지정된 행 선반에 밀어넣기
+                if (skill.row === 1) {
+                    shelfRow1.appendChild(itemDiv);
+                } else {
+                    shelfRow2.appendChild(itemDiv);
+                }
+            });
+        }
+
+        // -------------------------------------------------------------
+        // [가로 드래그 앤 스와이프 스크롤 구현]
+        // -------------------------------------------------------------
+        const wrapper = document.getElementById('carouselWrapper');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        wrapper.addEventListener('pointerdown', (e) => {
+            isDown = true;
+            wrapper.classList.add('active');
+            wrapper.setPointerCapture(e.pointerId);
+            startX = e.clientX;
+            scrollLeft = wrapper.scrollLeft;
+        });
+
+        function stopDrag(e) {
+            if (!isDown) return;
+            isDown = false;
+            wrapper.classList.remove('active');
+            if (e && wrapper.hasPointerCapture(e.pointerId)) {
+                wrapper.releasePointerCapture(e.pointerId);
+            }
+        }
+
+        wrapper.addEventListener('pointerup', stopDrag);
+        wrapper.addEventListener('pointercancel', stopDrag);
+
+        wrapper.addEventListener('pointermove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const walk = (e.clientX - startX) * 1.6; // 드래그 가중치 조절
+            wrapper.scrollLeft = scrollLeft - walk;
+        });
+
+        // 렌더링 호출
+        renderSkills();
+    </script>
+</body>
+
+</html>

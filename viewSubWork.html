@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 포트폴리오 - 보조업무</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            background-color: #0b0f0c;
+            background-image: radial-gradient(circle at center, rgba(11,15,12,0.75) 0%, rgba(8,10,8,0.92) 100%), url('프로필_배경.webp');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [보조업무 콘텐츠] */
+        /* ------------------------------------------------------------- */
+        .work-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 0;
+            padding-top: 5px;
+        }
+
+        .work-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .work-badge {
+            display: inline-block;
+            background: linear-gradient(to bottom, #42a5ff, #1a6fc4);
+            border: 3px solid #004a9e;
+            border-radius: 14px;
+            padding: 4px 18px;
+            font-size: 1rem;
+            color: #ffffff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .work-pct-label {
+            font-size: 0.95rem;
+            color: #42a5ff;
+            text-shadow: 0 0 8px rgba(66, 165, 255, 0.3);
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .work-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(66, 165, 255, 0.25);
+            border-radius: 18px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .work-card:hover {
+            border-color: rgba(66, 165, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(66, 165, 255, 0.15);
+        }
+
+        .work-card-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .work-card-title {
+            font-size: 1.15rem;
+            color: #8fcbff;
+            -webkit-text-stroke: 1px #000000;
+            paint-order: stroke fill;
+        }
+
+        .work-card-desc {
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.94rem;
+            font-weight: 600;
+            color: #bcc5be;
+            line-height: 1.5;
+            margin: 0;
+            word-break: keep-all;
+        }
+
+        .spotlight-bar {
+            height: 3px;
+            background: linear-gradient(to right, transparent, rgba(66, 165, 255, 0.4), transparent);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 760px), (max-height: 560px) {
+            .work-content {
+                overflow-y: auto;
+                padding-bottom: 12px;
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+                overflow: visible;
+            }
+
+            .work-card {
+                padding: 14px 16px;
+            }
+
+            .work-card-desc {
+                font-size: 0.86rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <div class="top-bar">
+            <div class="top-left">
+                <button class="back-circle-btn" onclick="location.href='viewWorkRatio.html'" title="돌아가기">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <h1 class="page-title">보조업무</h1>
+            </div>
+
+            <div class="top-right">
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-gold-icon">🪙</div>
+                        <span class="res-value">20,230,927</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-candy-icon">🍃</div>
+                        <span class="res-value">108,151</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <button class="home-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="홈으로">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1d3e04">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="work-content">
+            <div class="work-header">
+                <span class="work-badge">PM 보조</span>
+                <span class="work-pct-label">보조 업무 · 30%</span>
+            </div>
+
+            <div class="work-grid">
+                <div class="work-card">
+                    <div class="work-card-icon">📁</div>
+                    <div class="work-card-title">개발 리소스 관리</div>
+                    <p class="work-card-desc">구글드라이브를 활용한 개발 리소스 관리.<br>폴더 구조 설계 및 버전 관리 프로세스를 구축하여 팀 협업 효율을 향상시켰습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">🎨</div>
+                    <div class="work-card-title">이미지 리소스 요청</div>
+                    <p class="work-card-desc">Jira를 통한 이미지 리소스 생성 요청 및 트래킹.<br>디자이너들과의 원활한 협업을 위해 명확한 요청서와 참고 자료를 제공했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">📊</div>
+                    <div class="work-card-title">개발 일정 초안 작성</div>
+                    <p class="work-card-desc">구글 시트와 캘린더를 활용한 개발 일정 초안 작성.<br>개발 일정 관리와 디자인 리소스 요청 계획을 수립하여 안정적인 프로젝트 개발을 지원했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">🎉</div>
+                    <div class="work-card-title">이벤트 기획</div>
+                    <p class="work-card-desc">주년 행사 및 시즌 이벤트 기획.<br>유저 참여도를 높일 수 있는 이벤트 구상과 실행 가능성 검토를 담당했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">🎪</div>
+                    <div class="work-card-title">오프라인 행사 기획</div>
+                    <p class="work-card-desc">AGF 전시회 테마 기획.<br>행사 콘셉트와 다양한 굿즈 구상을 통해 유저 기대감을 극대화했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">🤖</div>
+                    <div class="work-card-title">커뮤니티 이슈 관리</div>
+                    <p class="work-card-desc">파이썬 크롤링을 활용한 키워드 기반 커뮤니티 이슈 트래킹.<br>유저 피드백을 실시간으로 수집/분석하여 빠른 대응이 가능하도록 지원했습니다.</p>
+                </div>
+            </div>
+
+            <div class="spotlight-bar"></div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

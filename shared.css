@@ -1,0 +1,274 @@
+/* ================================================================
+   ONE Mobile POP 폰트 불러오기
+   ================================================================ */
+@font-face {
+    font-family: 'ONE Mobile POP';
+    src: url('ONE Mobile POP.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ================================================================
+   전체 화면 기본 설정
+   body에서 flex 중앙 정렬 + overflow hidden
+   ================================================================ */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'ONE Mobile POP', 'Malgun Gothic', '맑은 고딕', sans-serif;
+    color: #ffffff;
+    user-select: none;          /* 텍스트 선택 방지 (게임 UI 느낌) */
+    overflow: hidden;           /* 스크롤 방지 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ================================================================
+   메인 콘텐츠 프레임
+   모든 페이지의 기본 틀 (1280x720 제한, column 방향)
+   ================================================================ */
+.scene-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 10px 25px;
+    max-width: 1280px;
+    max-height: 720px;
+    overflow: hidden;
+}
+
+/* ================================================================
+   상단바
+   ================================================================ */
+.top-bar {
+    display: flex;
+    justify-content: space-between;  /* 왼쪽(뒤로가기+제목) / 오른쪽(재화+홈) */
+    align-items: center;
+    height: 60px;
+    z-index: 10;
+    position: relative;
+    flex-shrink: 0;                 /* 높이 고정 (내용물 많아도 줄어들지 않음) */
+}
+
+.top-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ---- 뒤로가기 버튼 (연두색 동그라미) ---- */
+.back-circle-btn {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(to bottom, #aee23f, #6eb71c);
+    border: 3px solid #234c05;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.5);
+    transition: transform 0.15s ease;
+    outline: none;
+}
+
+.back-circle-btn:hover {
+    transform: scale(1.05);         /* 호버 시 살짝 커짐 */
+}
+
+.back-circle-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #1d3e04;                  /* 화살표 아이콘 색상 */
+}
+
+/* ---- 페이지 제목 (흰 글씨 + 검은 테두리) ---- */
+.page-title,
+.skill-title {
+    font-size: 2.2rem;
+    margin: 0;
+    color: #ffffff;
+    -webkit-text-stroke: 5px #000000;   /* 검은색 외곽선 */
+    paint-order: stroke fill;            /* 외곽선이 글씨 위에 */
+    text-shadow: 2px 2px 0px #000000;
+    letter-spacing: -1px;
+}
+
+/* ---- 오른쪽 영역 (재화 + 홈버튼) ---- */
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ---- 재화 표시 캡슐 ---- */
+.resource-capsule {
+    background-color: #f7f9ed;
+    border: 2px solid #b2bc95;
+    border-radius: 20px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 0 6px;
+    min-width: 140px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.res-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ---- 재화 아이콘 (동그라미) ---- */
+.res-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.res-gold-icon {
+    background: radial-gradient(circle, #ffe66d 0%, #ff8e05 100%);
+    border: 1px solid #9c5c00;
+}
+
+.res-candy-icon {
+    background: radial-gradient(circle, #a3f7ff 0%, #1c9eff 100%);
+    border: 1px solid #00569c;
+}
+
+/* ---- 재화 숫자 ---- */
+.res-value {
+    color: #1a2210;
+    font-size: 0.95rem;
+    font-weight: bold;
+    font-family: sans-serif;        /* 숫자는 기본 고딕이 더 잘 보임 */
+}
+
+/* ---- 재화 옆 + 버튼 ---- */
+.res-plus-btn {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(to bottom, #aee23f, #6eb71c);
+    border: 2px solid #234c05;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ---- 홈 버튼 ---- */
+.home-circle-btn {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(to bottom, #aee23f, #6eb71c);
+    border: 2.5px solid #234c05;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5);
+    outline: none;
+}
+
+/* ================================================================
+   작은 화면 대응
+   ================================================================ */
+@media (max-width: 760px), (max-height: 560px) {
+    body, html {
+        overflow: auto;
+        align-items: flex-start;
+    }
+
+    .scene-container {
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
+        max-height: none;
+        padding: 8px 12px;
+        overflow: visible;
+    }
+
+    .top-bar {
+        height: auto;
+        min-height: 48px;
+        gap: 8px;
+    }
+
+    .top-left {
+        gap: 8px;
+    }
+
+    .back-circle-btn {
+        width: 38px;
+        height: 38px;
+        border-width: 2px;
+    }
+
+    .back-circle-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .page-title,
+    .skill-title {
+        font-size: 1.55rem;
+        -webkit-text-stroke-width: 3px;
+    }
+
+    .top-right {
+        gap: 6px;
+    }
+
+    .resource-capsule {
+        min-width: 104px;
+        height: 30px;
+        border-radius: 16px;
+    }
+
+    .res-icon {
+        width: 22px;
+        height: 22px;
+        font-size: 0.85rem;
+    }
+
+    .res-value {
+        font-size: 0.75rem;
+    }
+
+    .res-plus-btn {
+        width: 20px;
+        height: 20px;
+        border-width: 1.5px;
+    }
+
+    .home-circle-btn {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+@media (max-width: 520px) {
+    .resource-capsule {
+        display: none;
+    }
+}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 포트폴리오 - 메인업무</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            background-color: #0b0f0c;
+            background-image: radial-gradient(circle at center, rgba(11,15,12,0.75) 0%, rgba(8,10,8,0.92) 100%), url('프로필_배경.webp');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [메인업무 콘텐츠] */
+        /* ------------------------------------------------------------- */
+        .work-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 0;
+            padding-top: 5px;
+        }
+
+        .work-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .work-badge {
+            display: inline-block;
+            background: linear-gradient(to bottom, #f05b95, #c72e6a);
+            border: 3px solid #771038;
+            border-radius: 14px;
+            padding: 4px 18px;
+            font-size: 1rem;
+            color: #ffffff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .work-pct-label {
+            font-size: 0.95rem;
+            color: #f05b95;
+            text-shadow: 0 0 8px rgba(240, 91, 149, 0.3);
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .work-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(240, 91, 149, 0.25);
+            border-radius: 18px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .work-card:hover {
+            border-color: rgba(240, 91, 149, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(240, 91, 149, 0.15);
+        }
+
+        .work-card-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .work-card-title {
+            font-size: 1.15rem;
+            color: #f8a5c0;
+            -webkit-text-stroke: 1px #000000;
+            paint-order: stroke fill;
+        }
+
+        .work-card-desc {
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.94rem;
+            font-weight: 600;
+            color: #bcc5be;
+            line-height: 1.5;
+            margin: 0;
+            word-break: keep-all;
+        }
+
+        .spotlight-bar {
+            height: 3px;
+            background: linear-gradient(to right, transparent, rgba(240, 91, 149, 0.4), transparent);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 760px), (max-height: 560px) {
+            .work-content {
+                overflow-y: auto;
+                padding-bottom: 12px;
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+                overflow: visible;
+            }
+
+            .work-card {
+                padding: 14px 16px;
+            }
+
+            .work-card-desc {
+                font-size: 0.82rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <div class="top-bar">
+            <div class="top-left">
+                <button class="back-circle-btn" onclick="location.href='viewWorkRatio.html'" title="돌아가기">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <h1 class="page-title">메인업무</h1>
+            </div>
+
+            <div class="top-right">
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-gold-icon">🪙</div>
+                        <span class="res-value">20,230,927</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-candy-icon">🍃</div>
+                        <span class="res-value">108,151</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <button class="home-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="홈으로">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1d3e04">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="work-content">
+            <div class="work-header">
+                <span class="work-badge">LQA</span>
+                <span class="work-pct-label">메인 업무 · 70%</span>
+            </div>
+
+            <div class="work-grid">
+                <div class="work-card">
+                    <div class="work-card-icon">🤝</div>
+                    <div class="work-card-title">퍼블리셔 커뮤니케이션</div>
+                    <p class="work-card-desc">글로벌 퍼블리셔와의 원활한 소통 창구 역할을 담당하며,<br>업데이트 일정 협의 및 리소스 전달 프로세스를 관리했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">✅</div>
+                    <div class="work-card-title">QA 및 빌드 검증</div>
+                    <p class="work-card-desc">업데이트 전 빌드 사전 점검, 현지화 누락 스트링 검수,<br>치명적 버그를 사전에 걸러내는 역할을 수행했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">🌐</div>
+                    <div class="work-card-title">이미지 현지화</div>
+                    <p class="work-card-desc">문화권에 맞는 이미지 리소스 현지화 요청 작업,<br>UI 및 프로모션 이미지의 텍스트/디자인을 현지화하여 디자인팀에 요청했습니다.</p>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-card-icon">📝</div>
+                    <div class="work-card-title">텍스트 현지화</div>
+                    <p class="work-card-desc">게임 내 모든 텍스트 번역 및 검수,<br>어색한 표현을 자연스럽게 다듬고, 문구를 통일하여 이용자 불편을 개선했습니다.</p>
+                </div>
+            </div>
+
+            <div class="spotlight-bar"></div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

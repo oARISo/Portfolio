@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 포트폴리오 - 어사이드</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            background-color: #FEF3D4;
+            background-image: none;
+        }
+
+        .scene-container {
+            border: 4px solid #FEC849;
+            border-radius: 28px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [어사이드 콘텐츠 스타일] */
+        /* ------------------------------------------------------------- */
+        .aside-top-banner {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 3.2rem;
+            letter-spacing: -1px;
+            white-space: nowrap;
+            text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff;
+            flex-shrink: 0;
+        }
+
+        .aside-title-red { color: #f23d3d; font-size: 3.85rem; }
+        .aside-title-blue { color: #1a91ff; font-size: 3.85rem; }
+        .aside-title-black { color: #252525; }
+        .aside-title-yellow { color: #ffcc00; font-size: 3.85rem; }
+
+        .aside-content-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.9fr 1.25fr;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-height: 0;
+            padding-bottom: 10px;
+        }
+
+        .aside-column {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            justify-content: center;
+        }
+
+        .aside-card {
+            background: #ffffff;
+            border: 4px solid #7a7a7a;
+            border-radius: 22px;
+            padding: 10px 16px;
+            position: relative;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .aside-badge {
+            display: inline-block;
+            font-size: 0.95rem;
+            color: #ffffff;
+            padding: 3px 14px;
+            border-radius: 16px;
+            border: 3px solid #5f5f5f;
+            margin-bottom: 8px;
+            font-weight: normal;
+            letter-spacing: -0.3px;
+        }
+
+        .aside-desc {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #383838;
+            line-height: 1.4;
+            margin: 0;
+            word-break: keep-all;
+        }
+
+        .aside-card.orange .aside-badge { background-color: #ff603d; color: #222222; }
+        .aside-card.orange { box-shadow: 0 8px 0 #ffd6cc; }
+
+        .aside-card.green .aside-badge { background-color: #8cc43f; color: #222222; }
+        .aside-card.green { box-shadow: 0 8px 0 #e2f0d9; }
+
+        .aside-card.purple .aside-badge { background-color: #b07fff; color: #222222; }
+        .aside-card.purple { box-shadow: 0 8px 0 #f0e6ff; }
+
+        .aside-card.yellow .aside-badge { background-color: #ffcc00; color: #222222; }
+        .aside-card.yellow { box-shadow: 0 8px 0 #fff2cc; }
+
+        .aside-card.blue .aside-badge { background-color: #42a5ff; color: #222222; }
+        .aside-card.blue { box-shadow: 0 8px 0 #ddeeff; }
+
+        .aside-char-zone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .aside-char-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 20px rgba(0, 0, 0, 0.18));
+        }
+
+        .aside-sparkle {
+            position: absolute;
+            font-size: 1.8rem;
+            color: #fecb02;
+            animation: asidePulse 1.5s infinite alternate ease-in-out;
+        }
+
+        .aside-sp-1 { top: 5%; left: 5%; }
+        .aside-sp-2 { bottom: 10%; right: 5%; color: #42a5ff; }
+
+        @keyframes asidePulse {
+            0% { transform: scale(0.85); opacity: 0.4; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        @media (max-width: 900px), (max-height: 620px) {
+            .scene-container {
+                border-radius: 18px;
+            }
+
+            .aside-top-banner {
+                font-size: clamp(1.5rem, 7vw, 2.4rem);
+                white-space: normal;
+                line-height: 1.15;
+            }
+
+            .aside-title-red,
+            .aside-title-blue,
+            .aside-title-yellow {
+                font-size: 1.18em;
+            }
+
+            .aside-content-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                overflow-y: auto;
+                padding-bottom: 18px;
+            }
+
+            .aside-column {
+                gap: 12px;
+            }
+
+            .aside-card {
+                padding: 10px 14px;
+            }
+
+            .aside-desc {
+                font-size: 0.88rem;
+            }
+
+            .aside-char-zone {
+                min-height: 280px;
+                max-height: 360px;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <!-- 상단바 -->
+        <div class="top-bar">
+            <div class="top-left">
+                <button class="back-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="돌아가기">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <h1 class="skill-title">어사이드</h1>
+            </div>
+
+            <div class="top-right">
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-gold-icon">🪙</div>
+                        <span class="res-value">20,230,927</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-candy-icon">🍃</div>
+                        <span class="res-value">108,151</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <button class="home-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="홈으로">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1d3e04">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- 어사이드 콘텐츠 -->
+        <div class="aside-top-banner">
+            <span class="aside-title-red">에피드</span><span class="aside-title-black">에</span> <span
+                class="aside-title-yellow">이렇</span><span class="aside-title-black">게</span> <span
+                class="aside-title-blue">기여</span><span class="aside-title-black">하겠습니다</span>
+        </div>
+
+        <div class="aside-content-grid">
+
+            <div class="aside-column">
+                <div class="aside-card orange">
+                    <span class="aside-badge">즐겁지 않다면 죽어라</span>
+                    <p class="aside-desc">즐겁지 않다면 즐거운 것을 찾아라,<br>즐거움은 찾는 것이지 부여받는 것이 아니다!</p>
+                </div>
+
+                <div class="aside-card green">
+                    <span class="aside-badge">남 탓할 거면 죽어라</span>
+                    <p class="aside-desc">모든 문제의 원인을 외부에서만 찾으면 발전은 없다.<br>남은 바꿀 수 없다, 내가 바꿀 수 있는 것에 집중해라!</p>
+                </div>
+
+                <div class="aside-card purple">
+                    <span class="aside-badge">민첩하지 않다면 죽어라</span>
+                    <p class="aside-desc">다양한 직무 경험을 바탕으로 하는<br>유연한 사고력과 빠른 이해력으로<br>원활한 커뮤니케이션을 이루겠습니다!</p>
+                </div>
+            </div>
+
+            <div class="aside-char-zone">
+                <span class="aside-sparkle aside-sp-1">✦</span>
+                <img src="캐릭터일러스트.png" alt="캐릭터 일러스트" class="aside-char-img" onerror="this.style.display='none';">
+                <span class="aside-sparkle aside-sp-2">✨</span>
+            </div>
+
+            <div class="aside-column">
+                <div class="aside-card yellow">
+                    <span class="aside-badge">힘들지 않다면 죽어라</span>
+                    <p class="aside-desc">힘들지 않았다는 것은 최선을 다하지 않았다는 것,<br>틀린 것에서 배우고, 배웠다면 써먹어라!<br>고생 끝에 행복에 오고, 노력 끝에 진화가 있다!</p>
+                </div>
+
+                <div class="aside-card blue">
+                    <span class="aside-badge">이상하지 않으면 죽어라</span>
+                    <p class="aside-desc">이상하다는 것은 특별하다는 것,<br>트릭컬리즘하고 독창적으로 운영하자!</p>
+                </div>
+
+                <div class="aside-card purple">
+                    <span class="aside-badge">온 가족이 즐거운 게임을 만들자</span>
+                    <p class="aside-desc">단순한 게임을 넘어, '온 가족이 즐거운 게임'을<br>에피드게임즈에서 실현하자!</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

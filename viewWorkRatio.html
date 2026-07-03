@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 포트폴리오 - 업무비중</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            background-color: #0b0f0c;
+            background-image: radial-gradient(circle at center, rgba(11,15,12,0.75) 0%, rgba(8,10,8,0.92) 100%), url('프로필_배경.webp');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [업무비중 콘텐츠] */
+        /* ------------------------------------------------------------- */
+        .ratio-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            min-height: 0;
+        }
+
+        .ratio-subtitle {
+            font-size: 1.2rem;
+            color: #aabbae;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(100, 255, 150, 0.15);
+        }
+
+        .donut-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            flex-shrink: 0;
+        }
+
+        .donut-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .donut-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-center-text .big {
+            font-size: 2.5rem;
+            color: #ffffff;
+            -webkit-text-stroke: 3px #000000;
+            paint-order: stroke fill;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .donut-center-text .small {
+            font-size: 1rem;
+            color: #aabbae;
+            margin-top: 4px;
+        }
+
+        .ratio-legend {
+            display: flex;
+            gap: 35px;
+            margin-top: 5px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            color: #dddddd;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .legend-dot.main { background: #f05b95; }
+        .legend-dot.sub { background: #42a5ff; }
+
+        .ratio-detail-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+
+        .ratio-detail-card {
+            flex: 1;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            padding: 16px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ratio-detail-card::after {
+            content: '\25B8';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.15);
+            transition: all 0.25s ease;
+        }
+
+        .ratio-detail-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .ratio-detail-card:hover::after {
+            right: 8px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .ratio-detail-card.main-card:hover {
+            border-color: rgba(240, 91, 149, 0.5);
+            box-shadow: 0 12px 30px rgba(240, 91, 149, 0.12);
+        }
+
+        .ratio-detail-card.sub-card:hover {
+            border-color: rgba(66, 165, 255, 0.5);
+            box-shadow: 0 12px 30px rgba(66, 165, 255, 0.12);
+        }
+
+        .ratio-detail-card .pct {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+
+        .ratio-detail-card .pct.main-pct { color: #f05b95; text-shadow: 0 0 12px rgba(240, 91, 149, 0.3); }
+        .ratio-detail-card .pct.sub-pct { color: #42a5ff; text-shadow: 0 0 12px rgba(66, 165, 255, 0.3); }
+
+        .ratio-detail-card .label {
+            font-size: 0.9rem;
+            color: #ccd5ce;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .ratio-detail-card .click-hint {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.2);
+            margin-top: 6px;
+            letter-spacing: 1px;
+            transition: color 0.25s ease;
+        }
+
+        .ratio-detail-card:hover .click-hint {
+            color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 760px), (max-height: 560px) {
+            .ratio-content {
+                justify-content: flex-start;
+                overflow-y: auto;
+                padding: 16px 0;
+            }
+
+            .donut-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .ratio-legend {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .ratio-detail-row {
+                flex-direction: column;
+                max-width: 360px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <div class="top-bar">
+            <div class="top-left">
+                <button class="back-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="돌아가기">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <h1 class="page-title">업무비중</h1>
+            </div>
+
+            <div class="top-right">
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-gold-icon">🪙</div>
+                        <span class="res-value">20,230,927</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-candy-icon">🍃</div>
+                        <span class="res-value">108,151</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <button class="home-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="홈으로">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1d3e04">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="ratio-content">
+            <div class="ratio-subtitle">WORK DISTRIBUTION</div>
+
+            <div class="donut-container">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#2a302c" stroke-width="8" />
+
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#f05b95" stroke-width="8"
+                        stroke-dasharray="251.2 0"
+                        stroke-dashoffset="0"
+                        pathLength="251.2"
+                        style="stroke-dasharray: 175.8 75.4; stroke-linecap: round;" />
+
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#42a5ff" stroke-width="8"
+                        stroke-dasharray="75.4 0"
+                        stroke-dashoffset="-179.8"
+                        pathLength="251.2"
+                        style="stroke-dasharray: 75.4 251.2; stroke-linecap: round;" />
+                </svg>
+                <div class="donut-center-text">
+                    <div class="big">100%</div>
+                    <div class="small">업무 비중</div>
+                </div>
+            </div>
+
+            <div class="ratio-legend">
+                <div class="legend-item">
+                    <span class="legend-dot main"></span>
+                    <span>메인업무 (LQA) 70%</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot sub"></span>
+                    <span>보조업무 (PM) 30%</span>
+                </div>
+            </div>
+
+            <div class="ratio-detail-row">
+                <a class="ratio-detail-card main-card" href="viewMainWork.html">
+                    <div class="pct main-pct">70%</div>
+                    <div class="label">메인업무 (LQA)</div>
+                    <div class="click-hint">자세히 보기</div>
+                </a>
+                <a class="ratio-detail-card sub-card" href="viewSubWork.html">
+                    <div class="pct sub-pct">30%</div>
+                    <div class="label">보조업무 (PM 보조)</div>
+                    <div class="click-hint">자세히 보기</div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

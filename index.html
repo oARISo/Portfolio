@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 프로토타입 - 통합 버전</title>
+    <style>
+        @font-face {
+            font-family: 'ONE Mobile POP';
+            src: url('ONE Mobile POP.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* 기본 화면 초기화 및 가득 채우기 */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #13021a;
+            overflow: hidden;
+            font-family: 'ONE Mobile POP', 'Malgun Gothic', '맑은 고딕', sans-serif;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        /* 전체 스크린 컨테이너 */
+        .scene-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SPA용 개별 뷰 공통 스타일 (부드러운 페이드 인/아웃 및 스케일 전환) */
+        .view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: scale(0.97);
+            z-index: 1;
+        }
+
+        .view.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [1. 인트로 뷰 스타일] */
+        /* ------------------------------------------------------------- */
+        #viewIntro {
+            cursor: pointer;
+        }
+
+        /* 이미지 공통 설정: 비율 상관없이 화면에 꽉 차게 고정 */
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        /* 첫 번째 이미지 */
+        .first-scene {
+            z-index: 10;
+            animation:
+                initialZoomIn 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                neonPulseGlow 3s ease-in-out infinite alternate,
+                fadeOutScene 1s ease-in-out 6s forwards;
+        }
+
+        /* 두 번째 이미지 */
+        .second-scene {
+            z-index: 5;
+            opacity: 0;
+            transform: scale(1.05);
+            animation: fadeInScene 1s ease-out 5s forwards;
+        }
+
+        /* 중앙 대사 자막 */
+        .dialogue-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 25;
+            color: #000000;
+            font-family: 'ONE Mobile POP', sans-serif;
+            font-size: 3rem;
+            font-weight: normal;
+            white-space: nowrap;
+            letter-spacing: -0.5px;
+            -webkit-text-stroke: 8px #ffffff;
+            paint-order: stroke fill;
+            text-shadow: 0 0 2px #ffffff, 0 0 2px #ffffff;
+            opacity: 0;
+        }
+
+        .text-first {
+            animation:
+                dialogueFadeIn 0.3s ease-out 0.5s forwards,
+                dialogueFadeOut 0.2s ease-in 3s forwards;
+        }
+
+        .text-second {
+            animation:
+                dialogueFadeIn 0.3s ease-out 3.2s forwards,
+                dialogueFadeOut 0.3s ease-in 6.0s forwards;
+        }
+
+        /* 터치 가이드 텍스트 */
+        .click-guide {
+            position: absolute;
+            bottom: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            color: #ffffff;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            opacity: 0;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(140, 50, 255, 0.5);
+            transition: opacity 0.5s ease;
+        }
+
+        .click-guide.show {
+            opacity: 0.9;
+            animation: pulsePulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulsePulse {
+            0% {
+                transform: translateX(-50%) scale(0.95);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+
+        /* ------------------------------------------------------------- */
+        /* [2. 메뉴 뷰 스타일 (픽업003)] */
+        /* ------------------------------------------------------------- */
+        #viewMenu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #13021a;
+        }
+
+        /* 16:9 이미지 비율을 화면 크기에 맞춰 완전히 보존하는 래퍼 */
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (min-aspect-ratio: 16/9) {
+            .image-wrapper {
+                width: calc(100vh * 16 / 9);
+                height: 100vh;
+            }
+        }
+
+        @media (max-aspect-ratio: 16/9) {
+            .image-wrapper {
+                width: 100vw;
+                height: calc(100vw * 9 / 16);
+            }
+        }
+
+        .third-scene {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            display: block;
+        }
+
+        /* 빨간 꽃 클릭 영역 스타일 */
+        .click-zone {
+            position: absolute;
+            display: block;
+            padding: 0;
+            border: 0;
+            border-radius: 50px;
+            background: transparent;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            z-index: 30;
+            transition: all 0.25s ease-in-out;
+            outline: none;
+        }
+
+        .click-zone:focus-visible {
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        /* 호버 시 프리미엄 발광 및 확대 효과 */
+        .click-zone:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* 클릭 영역별 정밀 배치 (16:9 화면 기준 비율) */
+        .zone-levelup {
+            left: 3%;
+            top: 27%;
+            width: 15%;
+            height: 11%;
+        }
+
+        .zone-skill {
+            left: 3%;
+            top: 49%;
+            width: 15%;
+            height: 11%;
+        }
+
+        .zone-promotion {
+            left: 0%;
+            top: 60.5%;
+            width: 15%;
+            height: 11%;
+        }
+
+        .zone-aside {
+            left: 0%;
+            top: 82.5%;
+            width: 15%;
+            height: 11%;
+        }
+
+        /* 디버그 가이드 토글 컨테이너 */
+        .debug-toggle-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(19, 2, 26, 0.85);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'ONE Mobile POP', sans-serif;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.5s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .debug-toggle-container:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .debug-toggle-container input {
+            cursor: pointer;
+            accent-color: #8c32ff;
+        }
+
+        /* 디버그 가이드 활성화 상태 스타일 */
+        #viewMenu.debug-mode .click-zone {
+            background-color: rgba(255, 0, 0, 0.35) !important;
+            border: 2px dashed #ff3333 !important;
+            box-shadow: 0 0 15px rgba(255, 50, 50, 0.8) !important;
+        }
+
+        #viewMenu.debug-mode .click-zone::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 50, 50, 0.9);
+            color: white;
+            padding: 3px 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            border-radius: 4px;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* [인트로 애니메이션 핵심 정의] */
+        /* ------------------------------------------------------------- */
+        @keyframes initialZoomIn {
+            0% {
+                transform: scale(1.15);
+                opacity: 0;
+                filter: brightness(0.2) blur(15px);
+            }
+
+            40% {
+                filter: brightness(1.4) blur(4px);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: brightness(1) blur(0);
+            }
+        }
+
+        @keyframes neonPulseGlow {
+            0% {
+                filter: drop-shadow(0 0 15px rgba(220, 150, 255, 0.5));
+            }
+
+            100% {
+                transform: scale(1.015);
+                filter: drop-shadow(0 0 35px rgba(240, 200, 255, 0.9));
+            }
+        }
+
+        @keyframes dialogueFadeIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -45%) scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes dialogueFadeOut {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -55%) scale(1.05);
+            }
+        }
+
+        @keyframes fadeOutScene {
+            0% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+
+            100% {
+                opacity: 0;
+                filter: brightness(2) blur(5px);
+            }
+        }
+
+        @keyframes fadeInScene {
+            0% {
+                opacity: 0;
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <!-- [1. 인트로 뷰] -->
+        <div id="viewIntro" class="view active">
+            <div class="dialogue-text text-first">모르는 건 배우면 그만이야</div>
+            <div class="dialogue-text text-second">내 이름은</div>
+
+            <img src="픽업001.png" alt="실루엣 연출" class="bg-image first-scene">
+            <img src="픽업002.png" alt="픽업 배너 전환" class="bg-image second-scene">
+
+            <!-- 인트로 완료 안내 텍스트 -->
+            <div class="click-guide" id="clickGuide">TAP TO START</div>
+        </div>
+
+        <!-- [2. 메뉴 뷰] -->
+        <div id="viewMenu" class="view">
+            <div class="image-wrapper">
+                <img src="픽업003.png" alt="최종 클릭 전환 이미지" class="third-scene" id="thirdImage">
+
+                <!-- 빨간 꽃 메뉴 클릭 영역 (SPA 화면 전환용 data-target) -->
+                <button type="button" class="click-zone zone-levelup" title="업무비중" aria-label="업무비중 페이지로 이동" data-target="viewWorkRatio"></button>
+                <button type="button" class="click-zone zone-skill" title="스킬" aria-label="스킬 페이지로 이동" data-target="viewSkill"></button>
+                <button type="button" class="click-zone zone-promotion" title="승급" aria-label="승급 페이지로 이동" data-target="viewPromotion"></button>
+                <button type="button" class="click-zone zone-aside" title="어사이드" aria-label="어사이드 페이지로 이동" data-target="viewAside"></button>
+            </div>
+
+            <!-- 디버그 토글 -->
+            <label class="debug-toggle-container" id="debugToggleContainer">
+                <input type="checkbox" id="debugCheckbox">
+                <span>클릭 영역 가이드 표시</span>
+            </label>
+        </div>
+
+    </div>
+
+    <script>
+        // DOM 요소 수집
+        const viewIntro = document.getElementById('viewIntro');
+        const viewMenu = document.getElementById('viewMenu');
+        const clickGuide = document.getElementById('clickGuide');
+        const debugCheckbox = document.getElementById('debugCheckbox');
+
+        // 상태 변수
+        const CLICK_DELAY = 7000; // 7초
+        let isIntroFinished = false;
+
+        // URL 파라미터 확인 후 인트로 스킵 처리 (스킬 뷰 등에서 돌아올 때 편의 제공)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('skipIntro') === 'true') {
+            isIntroFinished = true;
+            viewIntro.classList.remove('active');
+            viewMenu.classList.add('active');
+        } else {
+            // 7초 후 인트로 완료 처리 및 안내 가이드 활성화
+            setTimeout(() => {
+                isIntroFinished = true;
+                clickGuide.classList.add('show');
+            }, CLICK_DELAY);
+        }
+
+        // 뷰 전환 핵심 함수
+        function switchView(targetViewId) {
+            // 모든 뷰에서 active 클래스 제거
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+            // 대상 뷰에 active 클래스 추가
+            const targetView = document.getElementById(targetViewId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+        }
+
+        // 1. 인트로 클릭 이벤트 (완료 시 메뉴 화면으로 페이드 이동)
+        viewIntro.addEventListener('click', () => {
+            if (!isIntroFinished) return;
+            switchView('viewMenu');
+        });
+
+        // 2. 메뉴 뷰 내부 꽃 클릭 영역 전환 이벤트
+        document.querySelectorAll('.click-zone').forEach(zone => {
+            zone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const targetViewId = zone.getAttribute('data-target');
+                if (targetViewId === 'viewSkill') {
+                    location.href = 'viewSkill.html';
+                } else if (targetViewId === 'viewAside') {
+                    location.href = 'viewAside.html';
+                } else if (targetViewId === 'viewWorkRatio') {
+                    location.href = 'viewWorkRatio.html';
+                } else if (targetViewId === 'viewPromotion') {
+                    location.href = 'viewPromotion.html';
+                } else {
+                    switchView(targetViewId);
+                }
+            });
+        });
+
+        // 4. 개발용 디버그 가이드 토글 이벤트
+        debugCheckbox.addEventListener('change', () => {
+            if (debugCheckbox.checked) {
+                viewMenu.classList.add('debug-mode');
+            } else {
+                viewMenu.classList.remove('debug-mode');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

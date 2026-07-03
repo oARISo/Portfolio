@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트릭컬 포트폴리오 - 리뉴아극장</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body, html {
+            background-color: #0b0f0c;
+            background-image: radial-gradient(circle at center, rgba(11,15,12,0.70) 0%, rgba(8,10,8,0.90) 100%), url('리뉴아극장.webp');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .promotion-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 0;
+            padding: 8px 4px 4px 0;
+            overflow-y: auto;
+        }
+
+        .promotion-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .promotion-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+        }
+
+        .promotion-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 210, 90, 0.45);
+            border-radius: 8px;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(to bottom, #ffd25a, #f39722);
+            border: 3px solid #8a4c00;
+            border-radius: 14px;
+            padding: 4px 18px;
+            font-size: 1rem;
+            color: #ffffff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-subtitle {
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #f5d79c;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .project-card {
+            background: rgba(8, 10, 8, 0.72);
+            border: 2px solid rgba(255, 210, 90, 0.32);
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.36);
+        }
+
+        .project-video {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            background: #111111;
+        }
+
+        .project-video iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .project-title {
+            font-size: 1.05rem;
+            color: #ffd25a;
+            -webkit-text-stroke: 1px #000000;
+            paint-order: stroke fill;
+        }
+
+        .project-desc {
+            margin: 0;
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: #d4d9d1;
+            line-height: 1.45;
+            word-break: keep-all;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .project-tag {
+            padding: 3px 8px;
+            border: 1px solid rgba(255, 210, 90, 0.35);
+            border-radius: 999px;
+            background: rgba(255, 210, 90, 0.12);
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #ffe3a2;
+        }
+
+        .project-link {
+            align-self: flex-start;
+            margin-top: 2px;
+            color: #ffffff;
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-decoration: none;
+            border-bottom: 2px solid rgba(255, 210, 90, 0.65);
+        }
+
+        .project-link[aria-disabled="true"] {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        @media (max-width: 760px), (max-height: 560px) {
+            .promotion-content {
+                padding-bottom: 12px;
+            }
+
+            .section-title-row {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-card {
+                padding: 12px;
+            }
+
+            .project-desc {
+                font-size: 0.8rem;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container">
+
+        <div class="top-bar">
+            <div class="top-left">
+                <button class="back-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="돌아가기">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                </button>
+                <h1 class="page-title">극장</h1>
+            </div>
+
+            <div class="top-right">
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-gold-icon">🪙</div>
+                        <span class="res-value">20,230,927</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <div class="resource-capsule">
+                    <div class="res-left">
+                        <div class="res-icon res-candy-icon">🍃</div>
+                        <span class="res-value">108,151</span>
+                    </div>
+                    <div class="res-plus-btn">+</div>
+                </div>
+                <button class="home-circle-btn" onclick="location.href='index.html?skipIntro=true'" title="홈으로">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1d3e04">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <main class="promotion-content">
+            <div class="section-title-row">
+                <span class="section-badge">PROJECT</span>
+                <span class="section-subtitle">영상으로 확인 가능한 대표 프로젝트 4개</span>
+            </div>
+
+            <div class="project-grid">
+                <article class="project-card">
+                    <div class="project-video">
+                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/jwbyRd9Y5Xg?si=1vrLqTqttvXD8cJC" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 1 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-title">밀키☆하이웨이</div>
+                        <p class="project-desc">프로젝트 목표, 본인이 맡은 역할, 해결한 문제, 결과를 2~3줄로 정리하세요.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">역할</span>
+                            <span class="project-tag">사용 기술</span>
+                        </div>
+                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-video">
+                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/FBQAq0M6Nyg?si=WRJqPnhuHGAIdhls" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 2 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-title">FGO 성우 낭독극 -아발론 르 페이-</div>
+                        <p class="project-desc">프로젝트 목표, 본인이 맡은 역할, 해결한 문제, 결과를 2~3줄로 정리하세요.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">역할</span>
+                            <span class="project-tag">사용 기술</span>
+                        </div>
+                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-video">
+                        <iframe class="youtube-frame" data-youtube-url="https://www.youtube.com/watch?v=VIDEO_ID_3" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 3 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-title">프로젝트 3 제목</div>
+                        <p class="project-desc">프로젝트 목표, 본인이 맡은 역할, 해결한 문제, 결과를 2~3줄로 정리하세요.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">역할</span>
+                            <span class="project-tag">사용 기술</span>
+                        </div>
+                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-video">
+                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/Dby1uWqa-sU?si=G6mKjCYTwNF6BDu2" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 4 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-title">FGO 성우 낭독극</div>
+                        <p class="project-desc">프로젝트 목표, 본인이 맡은 역할, 해결한 문제, 결과를 2~3줄로 정리하세요.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">역할</span>
+                            <span class="project-tag">사용 기술</span>
+                        </div>
+                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('.youtube-frame').forEach((frame) => {
+            const youtubeUrl = frame.dataset.youtubeUrl;
+
+            if (!youtubeUrl || youtubeUrl.includes('VIDEO_ID')) {
+                return;
+            }
+
+            const card = frame.closest('.project-card');
+            const projectLink = card ? card.querySelector('.project-link') : null;
+
+            if (projectLink) {
+                projectLink.href = youtubeUrl;
+                projectLink.removeAttribute('aria-disabled');
+                projectLink.removeAttribute('tabindex');
+            }
+
+            try {
+                const url = new URL(youtubeUrl);
+                let videoId = url.searchParams.get('v');
+
+                if (url.hostname.includes('youtu.be')) {
+                    videoId = url.pathname.split('/').filter(Boolean)[0];
+                }
+
+                if (url.pathname.startsWith('/shorts/') || url.pathname.startsWith('/embed/')) {
+                    videoId = url.pathname.split('/').filter(Boolean)[1];
+                }
+
+                if (videoId) {
+                    frame.removeAttribute('srcdoc');
+                    frame.src = `https://www.youtube.com/embed/${videoId}?feature=oembed&rel=0&playsinline=1`;
+                }
+            } catch (error) {
+                console.warn('유튜브 링크를 확인해 주세요:', youtubeUrl);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
