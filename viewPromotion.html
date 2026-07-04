@@ -89,6 +89,20 @@
             border: 2px solid rgba(255, 255, 255, 0.16);
             border-radius: 14px;
             background: #111111;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .project-video.video-poster-milky {
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.32)), url('밀키하이웨이.jpg');
+        }
+
+        .project-video.video-poster-fgo-avalon {
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.32)), url('FGO_1.webp');
+        }
+
+        .project-video.video-poster-fgo-reading {
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.32)), url('FGO_2.webp');
         }
 
         .project-video iframe {
@@ -97,6 +111,25 @@
             width: 100%;
             height: 100%;
             border: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+        }
+
+        .project-video.is-youtube-loaded iframe {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .project-video-fallback {
+            position: absolute;
+            inset: 0;
+            display: block;
+            z-index: 0;
+        }
+
+        .project-video.is-youtube-loaded .project-video-fallback {
+            pointer-events: none;
         }
 
         .project-image {
@@ -104,6 +137,48 @@
             height: 100%;
             object-fit: cover;
             display: block;
+        }
+
+        .project-video-fallback-label {
+            position: absolute;
+            right: 12px;
+            bottom: 10px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.62);
+            color: #ffffff;
+            font-family: 'Malgun Gothic', sans-serif;
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-decoration: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .project-video-fallback-play {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 58px;
+            height: 42px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 14px;
+            background: rgba(204, 0, 0, 0.86);
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.45);
+        }
+
+        .project-video-fallback-play::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-38%, -50%);
+            width: 0;
+            height: 0;
+            border-top: 11px solid transparent;
+            border-bottom: 11px solid transparent;
+            border-left: 18px solid #ffffff;
         }
 
         .project-info {
@@ -155,11 +230,6 @@
             font-weight: 800;
             text-decoration: none;
             border-bottom: 2px solid rgba(255, 210, 90, 0.65);
-        }
-
-        .project-link[aria-disabled="true"] {
-            opacity: 0.45;
-            pointer-events: none;
         }
 
         @media (max-width: 760px), (max-height: 560px) {
@@ -234,8 +304,12 @@
 
             <div class="project-grid">
                 <article class="project-card">
-                    <div class="project-video">
-                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/FBQAq0M6Nyg?si=WRJqPnhuHGAIdhls" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 1 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    <div class="project-video video-poster-milky">
+                        <a class="project-video-fallback" href="https://youtu.be/FBQAq0M6Nyg?si=WRJqPnhuHGAIdhls" target="_blank" rel="noopener noreferrer" aria-label="밀키 하이웨이 유튜브에서 보기">
+                            <span class="project-video-fallback-play" aria-hidden="true"></span>
+                            <span class="project-video-fallback-label">유튜브에서 보기</span>
+                        </a>
+                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/FBQAq0M6Nyg?si=WRJqPnhuHGAIdhls" src="about:blank" title="프로젝트 1 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
                     </div>
                     <div class="project-info">
                         <div class="project-title">밀키☆하이웨이</div>
@@ -244,13 +318,17 @@
                             <span class="project-tag">역할: 번역, 타임스탬프 제작, 영상 자막 제작</span>
                             <span class="project-tag">사용 기술: Subtitle Edit, DaVinci Resolve</span>
                         </div>
-                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                        <a class="project-link" href="https://youtu.be/FBQAq0M6Nyg?si=WRJqPnhuHGAIdhls" target="_blank" rel="noopener noreferrer">유튜브에서 보기</a>
                     </div>
                 </article>
 
                 <article class="project-card">
-                    <div class="project-video">
-                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/Dby1uWqa-sU?si=G6mKjCYTwNF6BDu2" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 2 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    <div class="project-video video-poster-fgo-avalon">
+                        <a class="project-video-fallback" href="https://youtu.be/Dby1uWqa-sU?si=G6mKjCYTwNF6BDu2" target="_blank" rel="noopener noreferrer" aria-label="FGO 성우 낭독극 아발론 르 페이 유튜브에서 보기">
+                            <span class="project-video-fallback-play" aria-hidden="true"></span>
+                            <span class="project-video-fallback-label">유튜브에서 보기</span>
+                        </a>
+                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/Dby1uWqa-sU?si=G6mKjCYTwNF6BDu2" src="about:blank" title="프로젝트 2 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
                     </div>
                     <div class="project-info">
                         <div class="project-title">FGO 성우 낭독극 -아발론 르 페이-</div>
@@ -259,7 +337,7 @@
                             <span class="project-tag">역할: 번역, 타임스탬프 제작, 영상 자막 제작 요청</span>
                             <span class="project-tag">사용 기술: Subtitle Edit</span>
                         </div>
-                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                        <a class="project-link" href="https://youtu.be/Dby1uWqa-sU?si=G6mKjCYTwNF6BDu2" target="_blank" rel="noopener noreferrer">유튜브에서 보기</a>
                     </div>
                 </article>
 
@@ -268,7 +346,7 @@
                         <img src="퍼스트러브.webp" alt="퍼스트 러브 하츠코이 프로젝트 이미지" class="project-image">
                     </div>
                     <div class="project-info">
-                        <div class="project-title">넷플릭스 번역작업(퍼스트 러브, 범인 한자와 씨)</div>
+                        <div class="project-title">넷플릭스 번역작업(퍼스트러브, 범인 한자와 씨)</div>
                         <p class="project-desc">2차 번역자로 넷플릭스 드라마, 애니메이션 번역에 참가</p>
                         <div class="project-tags">
                             <span class="project-tag">역할: 2차 번역가</span>
@@ -278,8 +356,12 @@
                 </article>
 
                 <article class="project-card">
-                    <div class="project-video">
-                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/jwbyRd9Y5Xg?si=1vrLqTqttvXD8cJC" src="about:blank" srcdoc="<style>body{margin:0;background:#111;color:#ffe3a2;font-family:sans-serif;display:grid;place-items:center;height:100vh;font-weight:700}</style><span>유튜브 링크 입력 대기</span>" title="프로젝트 4 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    <div class="project-video video-poster-fgo-reading">
+                        <a class="project-video-fallback" href="https://youtu.be/jwbyRd9Y5Xg?si=1vrLqTqttvXD8cJC" target="_blank" rel="noopener noreferrer" aria-label="FGO 성우 낭독극 유튜브에서 보기">
+                            <span class="project-video-fallback-play" aria-hidden="true"></span>
+                            <span class="project-video-fallback-label">유튜브에서 보기</span>
+                        </a>
+                        <iframe class="youtube-frame" data-youtube-url="https://youtu.be/jwbyRd9Y5Xg?si=1vrLqTqttvXD8cJC" src="about:blank" title="프로젝트 4 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
                     </div>
                     <div class="project-info">
                         <div class="project-title">FGO 성우 낭독극</div>
@@ -288,7 +370,7 @@
                             <span class="project-tag">역할: 번역, 타임스탬프 제작, 영상 자막 제작</span>
                             <span class="project-tag">사용 기술: Subtitle Edit, DaVinci Resolve</span>
                         </div>
-                        <a class="project-link" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">유튜브에서 보기</a>
+                        <a class="project-link" href="https://youtu.be/jwbyRd9Y5Xg?si=1vrLqTqttvXD8cJC" target="_blank" rel="noopener noreferrer">유튜브에서 보기</a>
                     </div>
                 </article>
             </div>
@@ -304,14 +386,13 @@
                 return;
             }
 
-            const card = frame.closest('.project-card');
-            const projectLink = card ? card.querySelector('.project-link') : null;
+            const videoBox = frame.closest('.project-video');
 
-            if (projectLink) {
-                projectLink.href = youtubeUrl;
-                projectLink.removeAttribute('aria-disabled');
-                projectLink.removeAttribute('tabindex');
-            }
+            frame.addEventListener('load', () => {
+                if (frame.src.includes('youtube.com/embed/')) {
+                    videoBox?.classList.add('is-youtube-loaded');
+                }
+            });
 
             try {
                 const url = new URL(youtubeUrl);
@@ -326,7 +407,6 @@
                 }
 
                 if (videoId) {
-                    frame.removeAttribute('srcdoc');
                     frame.src = `https://www.youtube.com/embed/${videoId}?feature=oembed&rel=0&playsinline=1`;
                 }
             } catch (error) {
